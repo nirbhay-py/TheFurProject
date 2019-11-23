@@ -52,7 +52,6 @@
         <!--DashboardVC-->
         <scene sceneID="nAJ-2K-KDR">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="H1o-ya-JRC" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <viewController id="U6M-BY-7bR" customClass="dashboardVC" customModule="TheFurProject" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="p9a-Dx-LlR">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
@@ -83,7 +82,7 @@
                                     <color key="titleColor" systemColor="systemIndigoColor" red="0.34509803919999998" green="0.33725490200000002" blue="0.83921568629999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
                                 <connections>
-                                    <segue destination="AY7-aP-zgC" kind="show" id="azA-Ua-eLj"/>
+                                    <action selector="newIssue:" destination="U6M-BY-7bR" eventType="touchUpInside" id="75e-2E-x9A"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="49m-eT-Wxn">
@@ -97,6 +96,9 @@
                                 <state key="normal" title="View map">
                                     <color key="titleColor" systemColor="systemIndigoColor" red="0.34509803919999998" green="0.33725490200000002" blue="0.83921568629999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
+                                <connections>
+                                    <action selector="map:" destination="U6M-BY-7bR" eventType="touchUpInside" id="ono-9d-iY3"/>
+                                </connections>
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nMj-ef-HtF">
                                 <rect key="frame" x="0.0" y="617" width="375" height="50"/>
@@ -152,6 +154,9 @@
                                 <state key="normal" title="Past issues">
                                     <color key="titleColor" systemColor="systemIndigoColor" red="0.34509803919999998" green="0.33725490200000002" blue="0.83921568629999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
+                                <connections>
+                                    <action selector="pastIssues:" destination="U6M-BY-7bR" eventType="touchUpInside" id="XN0-oT-oZZ"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemIndigoColor" red="0.34509803919999998" green="0.33725490200000002" blue="0.83921568629999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -188,15 +193,17 @@
                         <outlet property="nameLbl" destination="jWY-Vd-5UD" id="t0s-xN-Jab"/>
                         <outlet property="pastConst" destination="UYW-78-Jqp" id="Rbb-dV-nWh"/>
                         <outlet property="profileImage" destination="kQo-9z-s9L" id="MSt-Ix-GKQ"/>
+                        <segue destination="AY7-aP-zgC" kind="show" identifier="issueVC" id="NvH-9k-gsk"/>
                     </connections>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="H1o-ya-JRC" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1727" y="135"/>
         </scene>
-        <!--View Controller-->
+        <!--IssueVC-->
         <scene sceneID="Xpr-Ee-8KT">
             <objects>
-                <viewController id="AY7-aP-zgC" sceneMemberID="viewController">
+                <viewController id="AY7-aP-zgC" customClass="issueVC" customModule="TheFurProject" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="5i9-zz-9vv">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

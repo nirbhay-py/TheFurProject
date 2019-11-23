@@ -25,9 +25,21 @@ class dashboardVC: UIViewController,CLLocationManagerDelegate{
     @IBOutlet weak var mapBtn: UIButton!
     @IBOutlet weak var nameLbl: UILabel!
     let hud = JGProgressHUD()
-
+    
     var thisUser:UserClass!
     let locationManager = CLLocationManager()
+    var newReportType:reportType!
+    
+    let btn1 = UIButton(frame: CGRect(x:33,y:0,width:150,height:50))
+    let btn2 = UIButton(frame: CGRect(x:33,y:60,width:150,height:50))
+    let btn3 = UIButton(frame: CGRect(x:33,y:120,width:150,height:50))
+    let subview = UIView(frame: CGRect(x:0,y:0,width:216,height:170))
+
+    let appearance = SCLAlertView.SCLAppearance(
+        showCloseButton: false,
+        shouldAutoDismiss: true
+    )
+    lazy var alert = SCLAlertView(appearance: appearance)
     
     
     override func viewWillAppear(_ animated: Bool) {
@@ -63,10 +75,15 @@ class dashboardVC: UIViewController,CLLocationManagerDelegate{
         super.viewDidLoad()
         askPermissions()
         setUpLocation()
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action:Selector(("dismissAlert")))
+        view.addGestureRecognizer(tap)
+    }
     
-
-
-}
+    @objc func dismissAlert(){
+        print("called")
+        self.alert.hideView()
+        
+    }
     @IBAction func viewAccount(_ sender: Any) {
         SCLAlertView().showInfo("Your account", subTitle:"Name - "+thisUser.fullName+"\nEmail - "+thisUser.email)
     }
@@ -89,7 +106,7 @@ class dashboardVC: UIViewController,CLLocationManagerDelegate{
     func setUpLocation(){
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        locationManager.requestAlwaysAuthorization()
+//        locationManager.requestWhenInUseAuthorization()
         hud.show(in: self.view,animated: true)
         locationManager.startUpdatingLocation()
         
@@ -117,4 +134,73 @@ class dashboardVC: UIViewController,CLLocationManagerDelegate{
         super.viewWillDisappear(animated)
         navigationController?.setNavigationBarHidden(false, animated: animated)
     }
+    @IBAction func newIssue(_ sender: Any) {
+        createSubview()
+    }
+    @IBAction func map(_ sender: Any) {
+    }
+    @IBAction func pastIssues(_ sender: Any) {
+    }
+    
+    //MARK:Input subview
+    
+    func createSubview(){
+        
+        // Create the subview
+        print(subview.frame.width)
+        btn1.setTitleColor(UIColor.systemYellow, for: .normal)
+        btn1.backgroundColor = UIColor.systemIndigo
+        btn1.setTitle("Injured animal", for: .normal)
+        btn1.layer.cornerRadius = 10
+        btn2.layer.cornerRadius = 10
+        btn3.layer.cornerRadius = 10
+        btn1.addTarget(self, action: #selector(self.btn1Clicked), for: .touchUpInside)
+        subview.addSubview(btn1)
+        btn2.setTitleColor(UIColor.systemYellow, for: .normal)
+        btn2.backgroundColor = UIColor.systemIndigo
+        btn2.setTitle("Adoption", for: .normal)
+        btn2.addTarget(self, action: #selector(self.btn2Clicked), for: .touchUpInside)
+        subview.addSubview(btn2)
+        btn3.setTitleColor(UIColor.systemYellow, for: .normal)
+        btn3.backgroundColor = UIColor.systemIndigo
+        btn3.setTitle("Volunteering", for: .normal)
+        btn3.addTarget(self, action: #selector(self.btn3Clicked), for: .touchUpInside)
+        subview.addSubview(btn3)
+        // Add the subview to the alert's UI property
+        alert.customSubview = subview
+        alert.showNotice("What happened?", subTitle: "")
+        
+    }
+    
+    @objc func btn1Clicked(){
+        newReportType = .injuredAnimal
+        self.btn1.flash()
+        self.alert.hideView()
+        self.performSegue(withIdentifier: "issueVC", sender: self)
+    }
+    @objc func btn2Clicked(){
+        newReportType = .adoptionType
+        self.btn2.flash()
+        self.alert.hideView()
+        self.performSegue(withIdentifier: "issueVC", sender: self)
+
+    }
+    @objc func btn3Clicked(){
+        newReportType = .volunteerOpp
+        self.btn3.flash()
+        self.alert.hideView()
+        self.performSegue(withIdentifier: "issueVC", sender: self)
+
+
+    }
+
+        
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if(segue.identifier=="issueVC"){
+            let destVC = segue.destination as! issueVC
+            destVC.reportType = self.newReportType
+        }
+    }
 }
+
+
