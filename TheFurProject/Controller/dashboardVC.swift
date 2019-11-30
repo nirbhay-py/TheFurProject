@@ -106,7 +106,6 @@ class dashboardVC: UIViewController,CLLocationManagerDelegate{
     func setUpLocation(){
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
-//        locationManager.requestWhenInUseAuthorization()
         hud.show(in: self.view,animated: true)
         locationManager.startUpdatingLocation()
         
@@ -123,7 +122,7 @@ class dashboardVC: UIViewController,CLLocationManagerDelegate{
                 showAlert(msg: "You may have connectivity issues :"+error!.localizedDescription)
             }else{
                 print(resp?.results()?.first)
-                self.addressLbl.text = resp?.results()?.first?.thoroughfare
+                self.addressLbl.text = resp?.results()?.first?.subLocality
             }
             
         })
@@ -163,7 +162,7 @@ class dashboardVC: UIViewController,CLLocationManagerDelegate{
         subview.addSubview(btn2)
         btn3.setTitleColor(UIColor.systemYellow, for: .normal)
         btn3.backgroundColor = UIColor.systemIndigo
-        btn3.setTitle("Volunteering", for: .normal)
+        btn3.setTitle("Animal abuse", for: .normal)
         btn3.addTarget(self, action: #selector(self.btn3Clicked), for: .touchUpInside)
         subview.addSubview(btn3)
         // Add the subview to the alert's UI property
@@ -186,12 +185,10 @@ class dashboardVC: UIViewController,CLLocationManagerDelegate{
 
     }
     @objc func btn3Clicked(){
-        newReportType = .volunteerOpp
+        newReportType = .animalAbuse
         self.btn3.flash()
         self.alert.hideView()
         self.performSegue(withIdentifier: "issueVC", sender: self)
-
-
     }
 
         
@@ -199,6 +196,10 @@ class dashboardVC: UIViewController,CLLocationManagerDelegate{
         if(segue.identifier=="issueVC"){
             let destVC = segue.destination as! issueVC
             destVC.reportType = self.newReportType
+            destVC.user = self.thisUser
+        }else if(segue.identifier=="toMap"){
+            let destVC = segue.destination as! mapVC
+            destVC.thisUser = self.thisUser
         }
     }
 }

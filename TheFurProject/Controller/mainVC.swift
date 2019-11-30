@@ -19,7 +19,6 @@ class mainVC: UIViewController,  GIDSignInDelegate{
     var globalUser:UserClass!
     
     override func viewWillAppear(_ animated: Bool) {
-           
           
         navigationController?.setNavigationBarHidden(true, animated: animated)
         GIDSignIn.sharedInstance().clientID = FirebaseApp.app()?.options.clientID
@@ -44,9 +43,10 @@ class mainVC: UIViewController,  GIDSignInDelegate{
     override func viewDidLoad() {
 
         if(Auth.auth().currentUser != nil){
+
             print("signed in")
             getSignedInDetails()
-            self.performSegue(withIdentifier: "signInSegue", sender: self)
+            
         }
         super.viewDidLoad()
     }
@@ -131,21 +131,27 @@ class mainVC: UIViewController,  GIDSignInDelegate{
     }
     
     func getSignedInDetails(){
-        print("called")
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.persistentContainer.viewContext
-        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "User")
-        do {
-            let resp = try managedContext.fetch(fetchRequest)
-            let data = resp.first!
-            self.globalUser = UserClass(fullName: data.value(forKey: "fullName") as! String, email: data.value(forKey: "email") as! String, userID: data.value(forKey: "userID") as! String, photoURL: data.value(forKey: "photoURL") as! String, givenName: data.value(forKey: "givenName") as! String)
-            
-
-        } catch let error as NSError {
-            print("Could not fetch. \(error), \(error.userInfo)")
+            let localHud = JGProgressHUD.init()
+                localHud.show(in: self.view,animated: true)
+                print("called\n")
+                //MARK:FETCH DATA FROM FIREBASE, INITIALISE A USERCLASS OBJECT AND PASS IT IN THE SEGUE
+                var email = Auth.auth().currentUser?.email
+                email = splitString(str: email!, delimiter: ".")
+                let ref = Database.database().reference().child("user-node").child(email!)
+                ref.observeSingleEvent(of: .value, with: {(snapshot) in
+                    let value = snapshot.value as? NSDictionary
+                    let givenName=value!["givenName"] as! String
+                    let name = value!["name"] as! String
+                    let email = value!["email"] as! String
+                    let photoURL = value!["photoURL"] as! String
+                    let userID = value!["userID"] as! String
+                    self.globalUser = UserClass(fullName: name, email: email, userID: userID, photoURL: photoURL, givenName: givenName)
+                    localHud.dismiss()
+                    self.performSegue(withIdentifier: "signInSegue", sender: self)
+                }){ (error) in
+                    print(error.localizedDescription)
+                    showAlert(msg: error.localizedDescription)
         }
     }
-    
-    
 }
 
